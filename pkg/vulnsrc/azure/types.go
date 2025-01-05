@@ -1,6 +1,6 @@
 package azure
 
-import "go.khulnasoft.com/tunnel-db/pkg/vulnsrc/azure/oval"
+import "github.com/khulnasoft/tunnel-db/pkg/vulnsrc/azure/oval"
 
 type operator string
 

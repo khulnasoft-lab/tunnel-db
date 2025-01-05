@@ -3,9 +3,9 @@ package pkg
 import (
 	"time"
 
+	"github.com/khulnasoft/tunnel-db/pkg/utils"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc"
 	"github.com/urfave/cli"
-	"go.khulnasoft.com/tunnel-db/pkg/utils"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc"
 )
 
 type AppConfig struct{}
@@ -37,6 +37,11 @@ func (ac *AppConfig) NewApp(version string) *cli.App {
 					Name:  "cache-dir",
 					Usage: "cache directory path",
 					Value: utils.CacheDir(),
+				},
+				cli.StringFlag{
+					Name:  "output-dir",
+					Usage: "output directory path",
+					Value: "out",
 				},
 				cli.DurationFlag{
 					Name:   "update-interval",

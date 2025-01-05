@@ -1,14 +1,18 @@
-package oracleoval
+package oracleoval_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
 
-	"go.khulnasoft.com/tunnel-db/pkg/types"
-	"go.khulnasoft.com/tunnel-db/pkg/utils"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/vulnerability"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrctest"
+	"github.com/khulnasoft/tunnel-db/pkg/db"
+	"github.com/khulnasoft/tunnel-db/pkg/dbtest"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
+	"github.com/khulnasoft/tunnel-db/pkg/utils"
+	oracleoval "github.com/khulnasoft/tunnel-db/pkg/vulnsrc/oracle-oval"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrctest"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {
@@ -42,6 +46,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "30:9.3.3-8.el5",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -53,6 +60,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "30:9.3.3-8.el5",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -64,6 +74,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "30:9.3.3-8.el5",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -75,6 +88,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "30:9.3.3-8.el5",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -140,6 +156,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el6uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -151,6 +170,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el6uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -162,6 +184,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el6uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -173,6 +198,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el6uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -184,6 +212,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el7uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -195,6 +226,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el7uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -206,6 +240,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el7uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -217,6 +254,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "4.1.12-124.24.3.el7uek",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -271,13 +311,26 @@ func TestVulnSrc_Update(t *testing.T) {
 				{
 					Key: []string{"advisory-detail", "CVE-2021-20232", "Oracle Linux 8", "gnutls"},
 					Value: types.Advisories{
-						FixedVersion: "3.6.16-4.el8",
+						FixedVersion: "3.6.16-5.el8",
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "10:3.6.16-4.0.1.el8_fips",
+								Arches: []string{
+									"aarch64",
+									"x86_64",
+								},
 							},
 							{
 								FixedVersion: "3.6.16-4.el8",
+								Arches: []string{
+									"aarch64",
+								},
+							},
+							{
+								FixedVersion: "3.6.16-5.el8",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -289,6 +342,10 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "3.4.1-7.el8",
+								Arches: []string{
+									"aarch64",
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -331,6 +388,10 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "5.4.17-2102.203.5.el7uek",
+								Arches: []string{
+									"aarch64",
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -342,6 +403,10 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "5.4.17-2102.203.5.el8uek",
+								Arches: []string{
+									"aarch64",
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -383,6 +448,9 @@ func TestVulnSrc_Update(t *testing.T) {
 						Entries: []types.Advisory{
 							{
 								FixedVersion: "2:2.28-151.0.1.ksplice2.el8",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -419,10 +487,13 @@ func TestVulnSrc_Update(t *testing.T) {
 				{
 					Key: []string{"advisory-detail", "ELSA-2007-0057", "Oracle Linux 5", "bind-devel"},
 					Value: types.Advisories{
-						FixedVersion: "9.3.3-8.el5",
+						FixedVersion: "30:9.3.3-8.el5",
 						Entries: []types.Advisory{
 							{
-								FixedVersion: "9.3.3-8.el5",
+								FixedVersion: "30:9.3.3-8.el5",
+								Arches: []string{
+									"x86_64",
+								},
 							},
 						},
 					},
@@ -479,7 +550,7 @@ func TestVulnSrc_Update(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			vs := NewVulnSrc()
+			vs := oracleoval.NewVulnSrc()
 			vulnsrctest.TestUpdate(t, vs, vulnsrctest.TestUpdateArgs{
 				Dir:        tt.dir,
 				WantValues: tt.wantValues,
@@ -494,19 +565,28 @@ func TestVulnSrc_Get(t *testing.T) {
 		name     string
 		fixtures []string
 		version  string
+		arch     string
 		pkgName  string
 		want     []types.Advisory
 		wantErr  string
 	}{
 		{
-			name:     "happy path",
-			fixtures: []string{"testdata/fixtures/happy.yaml", "testdata/fixtures/data-source.yaml"},
-			version:  "8",
-			pkgName:  "bind",
+			name: "happy path",
+			fixtures: []string{
+				"testdata/fixtures/happy.yaml",
+				"testdata/fixtures/data-source.yaml",
+			},
+			version: "8",
+			arch:    "x86_64",
+			pkgName: "bind",
 			want: []types.Advisory{
 				{
 					VulnerabilityID: "ELSA-2019-1145",
 					FixedVersion:    "32:9.11.4-17.P2.el8_0",
+					Arches: []string{
+						"aarch64",
+						"x86_64",
+					},
 					DataSource: &types.DataSource{
 						ID:   "oracle-oval",
 						Name: "Oracle Linux OVAL definitions",
@@ -516,14 +596,21 @@ func TestVulnSrc_Get(t *testing.T) {
 			},
 		},
 		{
-			name:     "happy path. Multiple versions for one CVE",
-			fixtures: []string{"testdata/fixtures/multiple-versions.yaml", "testdata/fixtures/data-source.yaml"},
-			version:  "8",
-			pkgName:  "gnutls",
+			name: "happy path. Multiple versions for one CVE",
+			fixtures: []string{
+				"testdata/fixtures/multiple-versions.yaml",
+				"testdata/fixtures/data-source.yaml",
+			},
+			version: "8",
+			pkgName: "gnutls",
+			arch:    "x86_64",
 			want: []types.Advisory{
 				{
 					VulnerabilityID: "CVE-2021-20232",
 					FixedVersion:    "10:3.6.16-4.0.1.el8_fips",
+					Arches: []string{
+						"x86_64",
+					},
 					DataSource: &types.DataSource{
 						ID:   "oracle-oval",
 						Name: "Oracle Linux OVAL definitions",
@@ -533,6 +620,10 @@ func TestVulnSrc_Get(t *testing.T) {
 				{
 					VulnerabilityID: "CVE-2021-20232",
 					FixedVersion:    "3.6.16-4.el8",
+					Arches: []string{
+						"aarch64",
+						"x86_64",
+					},
 					DataSource: &types.DataSource{
 						ID:   "oracle-oval",
 						Name: "Oracle Linux OVAL definitions",
@@ -542,10 +633,13 @@ func TestVulnSrc_Get(t *testing.T) {
 			},
 		},
 		{
-			name:     "happy path. Old tunnel-db",
-			fixtures: []string{"testdata/fixtures/old.yaml", "testdata/fixtures/data-source.yaml"},
-			version:  "8",
-			pkgName:  "bind",
+			name: "happy path. Old tunnel-db",
+			fixtures: []string{
+				"testdata/fixtures/old.yaml",
+				"testdata/fixtures/data-source.yaml",
+			},
+			version: "8",
+			pkgName: "bind",
 			want: []types.Advisory{
 				{
 					VulnerabilityID: "ELSA-2019-1145",
@@ -559,30 +653,63 @@ func TestVulnSrc_Get(t *testing.T) {
 			},
 		},
 		{
-			name:     "no advisories are returned",
-			fixtures: []string{"testdata/fixtures/happy.yaml"},
-			version:  "8",
-			pkgName:  "no-package",
-			want:     nil,
+			name: "different fixed versions for different arches",
+			fixtures: []string{
+				"testdata/fixtures/different-versions-for-arches.yaml",
+				"testdata/fixtures/data-source.yaml",
+			},
+			version: "7",
+			pkgName: "rsyslog",
+			arch:    "aarch64",
+			want: []types.Advisory{
+				{
+					VulnerabilityID: "CVE-2022-24903",
+					FixedVersion:    "8.24.0-57.0.4.el7_9.3",
+					Arches: []string{
+						"aarch64",
+					},
+					DataSource: &types.DataSource{
+						ID:   vulnerability.OracleOVAL,
+						Name: "Oracle Linux OVAL definitions",
+						URL:  "https://linux.oracle.com/security/oval/",
+					},
+				},
+			},
 		},
 		{
-			name:     "GetAdvisories returns an error",
-			fixtures: []string{"testdata/fixtures/sad.yaml"},
-			version:  "8",
-			pkgName:  "bind",
-			wantErr:  "failed to unmarshal advisory JSON",
+			name: "no advisories are returned",
+			fixtures: []string{
+				"testdata/fixtures/happy.yaml",
+			},
+			version: "8",
+			pkgName: "no-package",
+			want:    nil,
+		},
+		{
+			name: "GetAdvisories returns an error",
+			fixtures: []string{
+				"testdata/fixtures/sad.yaml",
+			},
+			version: "8",
+			pkgName: "bind",
+			wantErr: "failed to unmarshal advisory JSON",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			vs := NewVulnSrc()
-			vulnsrctest.TestGet(t, vs, vulnsrctest.TestGetArgs{
-				Fixtures:   tt.fixtures,
-				WantValues: tt.want,
-				Release:    tt.version,
-				PkgName:    tt.pkgName,
-				WantErr:    tt.wantErr,
-			})
+			_ = dbtest.InitDB(t, tt.fixtures)
+			defer db.Close()
+
+			vs := oracleoval.NewVulnSrc()
+			got, err := vs.Get(tt.version, tt.pkgName, tt.arch)
+
+			if tt.wantErr != "" {
+				require.ErrorContains(t, err, tt.wantErr)
+				return
+			}
+
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }

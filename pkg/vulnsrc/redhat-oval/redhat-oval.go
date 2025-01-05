@@ -11,13 +11,13 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/khulnasoft/tunnel-db/pkg/db"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
+	"github.com/khulnasoft/tunnel-db/pkg/utils"
+	"github.com/khulnasoft/tunnel-db/pkg/utils/ints"
+	ustrings "github.com/khulnasoft/tunnel-db/pkg/utils/strings"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/vulnerability"
 	bolt "go.etcd.io/bbolt"
-	"go.khulnasoft.com/tunnel-db/pkg/db"
-	"go.khulnasoft.com/tunnel-db/pkg/types"
-	"go.khulnasoft.com/tunnel-db/pkg/utils"
-	"go.khulnasoft.com/tunnel-db/pkg/utils/ints"
-	ustrings "go.khulnasoft.com/tunnel-db/pkg/utils/strings"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/vulnerability"
 	"golang.org/x/exp/slices"
 	"golang.org/x/xerrors"
 )
@@ -248,7 +248,7 @@ func (vs VulnSrc) Get(pkgName string, repositories, nvrs []string) ([]types.Advi
 	}
 
 	if len(cpeIndices) == 0 {
-		return nil, xerrors.Errorf("unable to find CPE indices. See https://go.khulnasoft.com/tunnel-db/issues/435 for details")
+		return nil, xerrors.Errorf("unable to find CPE indices. See https://github.com/khulnasoft/tunnel-db/issues/435 for details")
 	}
 
 	rawAdvisories, err := vs.dbc.ForEachAdvisory([]string{rootBucket}, pkgName)

@@ -1,30 +1,31 @@
 package vulnsrc
 
 import (
-	"go.khulnasoft.com/tunnel-db/pkg/types"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/alma"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/alpine"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/amazon"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/azure"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/bitnami"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/bundler"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/chainguard"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/composer"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/debian"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/ghsa"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/glad"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/govulndb"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/k8svulndb"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/node"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/nvd"
-	oracleoval "go.khulnasoft.com/tunnel-db/pkg/vulnsrc/oracle-oval"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/photon"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/redhat"
-	redhatoval "go.khulnasoft.com/tunnel-db/pkg/vulnsrc/redhat-oval"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/rocky"
-	susecvrf "go.khulnasoft.com/tunnel-db/pkg/vulnsrc/suse-cvrf"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/ubuntu"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/wolfi"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/alma"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/alpine"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/amazon"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/aqua"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/azure"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/bitnami"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/bundler"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/chainguard"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/composer"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/debian"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/ghsa"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/glad"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/govulndb"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/k8svulndb"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/node"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/nvd"
+	oracleoval "github.com/khulnasoft/tunnel-db/pkg/vulnsrc/oracle-oval"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/photon"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/redhat"
+	redhatoval "github.com/khulnasoft/tunnel-db/pkg/vulnsrc/redhat-oval"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/rocky"
+	susecvrf "github.com/khulnasoft/tunnel-db/pkg/vulnsrc/suse-cvrf"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/ubuntu"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/wolfi"
 )
 
 type VulnSrc interface {
@@ -66,5 +67,7 @@ var (
 		ghsa.NewVulnSrc(),
 		glad.NewVulnSrc(),
 		govulndb.NewVulnSrc(), // For Go stdlib packages
+
+		aqua.NewVulnSrc(),
 	}
 )

@@ -3,7 +3,7 @@ package bucket
 import (
 	"fmt"
 
-	"go.khulnasoft.com/tunnel-db/pkg/types"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
 )
 
 const separator = "::"

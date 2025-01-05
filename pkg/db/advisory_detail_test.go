@@ -3,12 +3,12 @@ package db_test
 import (
 	"testing"
 
+	"github.com/khulnasoft/tunnel-db/pkg/db"
+	"github.com/khulnasoft/tunnel-db/pkg/dbtest"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	bolt "go.etcd.io/bbolt"
-	"go.khulnasoft.com/tunnel-db/pkg/db"
-	"go.khulnasoft.com/tunnel-db/pkg/dbtest"
-	"go.khulnasoft.com/tunnel-db/pkg/types"
 )
 
 func TestConfig_SaveAdvisoryDetails(t *testing.T) {

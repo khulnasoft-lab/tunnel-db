@@ -17,6 +17,7 @@ jobs:
       - name: Lint
         uses: golangci/golangci-lint-action@v6.0.1
         with:
+          version: v1.54
           args: --verbose
 
       - name: Test

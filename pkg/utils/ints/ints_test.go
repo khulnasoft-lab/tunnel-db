@@ -3,8 +3,8 @@ package ints_test
 import (
 	"testing"
 
+	"github.com/khulnasoft/tunnel-db/pkg/utils/ints"
 	"github.com/stretchr/testify/assert"
-	"go.khulnasoft.com/tunnel-db/pkg/utils/ints"
 )
 
 func TestHasIntersection(t *testing.T) {

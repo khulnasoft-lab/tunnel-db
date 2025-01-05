@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/khulnasoft/tunnel-db/pkg/db"
 	"github.com/stretchr/testify/require"
 	"go.etcd.io/bbolt"
-	"go.khulnasoft.com/tunnel-db/pkg/db"
 )
 
 func TestInit(t *testing.T) {

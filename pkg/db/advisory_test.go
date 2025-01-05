@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/khulnasoft/tunnel-db/pkg/db"
+	"github.com/khulnasoft/tunnel-db/pkg/dbtest"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.khulnasoft.com/tunnel-db/pkg/db"
-	"go.khulnasoft.com/tunnel-db/pkg/dbtest"
-	"go.khulnasoft.com/tunnel-db/pkg/types"
 )
 
 func TestConfig_ForEachAdvisory(t *testing.T) {

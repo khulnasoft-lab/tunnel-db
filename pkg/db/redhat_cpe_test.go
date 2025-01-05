@@ -3,10 +3,10 @@ package db_test
 import (
 	"testing"
 
+	"github.com/khulnasoft/tunnel-db/pkg/db"
+	"github.com/khulnasoft/tunnel-db/pkg/dbtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.khulnasoft.com/tunnel-db/pkg/db"
-	"go.khulnasoft.com/tunnel-db/pkg/dbtest"
 )
 
 func TestConfig_GetRedHatCPEs(t *testing.T) {

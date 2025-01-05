@@ -3,10 +3,10 @@ package bucket_test
 import (
 	"testing"
 
+	"github.com/khulnasoft/tunnel-db/pkg/types"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/bucket"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/vulnerability"
 	"github.com/stretchr/testify/assert"
-	"go.khulnasoft.com/tunnel-db/pkg/types"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/bucket"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/vulnerability"
 )
 
 func TestBucketName(t *testing.T) {

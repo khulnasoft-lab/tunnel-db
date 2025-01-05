@@ -5,7 +5,7 @@ import (
 	"io"
 	"path/filepath"
 
-	"go.khulnasoft.com/tunnel-db/pkg/utils"
+	"github.com/khulnasoft/tunnel-db/pkg/utils"
 	"golang.org/x/xerrors"
 )
 

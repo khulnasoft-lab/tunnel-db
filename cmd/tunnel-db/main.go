@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"go.khulnasoft.com/tunnel-db/pkg"
+	"github.com/khulnasoft/tunnel-db/pkg"
 )
 
 var (

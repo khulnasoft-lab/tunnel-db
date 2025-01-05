@@ -3,7 +3,7 @@ package redhatoval
 import (
 	"encoding/json"
 
-	"go.khulnasoft.com/tunnel-db/pkg/types"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
 )
 
 type redhatOVAL struct {

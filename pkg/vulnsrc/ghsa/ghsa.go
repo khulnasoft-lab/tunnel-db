@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"go.khulnasoft.com/tunnel-db/pkg/types"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/osv"
-	"go.khulnasoft.com/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/khulnasoft/tunnel-db/pkg/types"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/osv"
+	"github.com/khulnasoft/tunnel-db/pkg/vulnsrc/vulnerability"
 	"golang.org/x/tools/go/packages"
 	"golang.org/x/xerrors"
 )

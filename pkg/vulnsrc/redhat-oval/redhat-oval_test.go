@@ -6,6 +6,9 @@ import (
 	"sort"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
@@ -13,8 +16,6 @@ import (
 	redhat "github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/redhat-oval"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrctest"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {
@@ -782,12 +783,12 @@ func TestVulnSrc_Update(t *testing.T) {
 		{
 			name:    "broken repo-to-cpe",
 			dir:     filepath.Join("testdata", "broken-repo-to-cpe"),
-			wantErr: "JSON parse error",
+			wantErr: "json parse error",
 		},
 		{
 			name:    "broken JSON",
 			dir:     filepath.Join("testdata", "sad"),
-			wantErr: "failed to decode",
+			wantErr: "failed to parse OVAL stream",
 		},
 	}
 

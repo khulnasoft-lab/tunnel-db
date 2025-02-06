@@ -3,13 +3,14 @@ package ghsa
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"path/filepath"
 
+	"github.com/samber/oops"
+	"golang.org/x/exp/slices"
+
+	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
-	"golang.org/x/exp/slices"
-	"golang.org/x/xerrors"
 )
 
 // Spec is cocoapods struct
@@ -25,7 +26,9 @@ type Source struct {
 var cocoapodsSpecDir = filepath.Join("cocoapods-specs", "Specs")
 
 func walkCocoaPodsSpecs(root string) (map[string][]string, error) {
-	log.Printf("Walk `Cocoapods Specs` to convert Swift URLs to Cocoapods package names")
+	log.WithPrefix("cocoapods").Info("Walk `Cocoapods Specs` to convert Swift URLs to Cocoapods package names")
+	eb := oops.In("cocoapods").With("root_dir", root)
+
 	var specs = make(map[string][]string)
 	err := utils.FileWalk(filepath.Join(root, cocoapodsSpecDir), func(r io.Reader, path string) error {
 		if filepath.Ext(path) != ".json" {
@@ -33,7 +36,7 @@ func walkCocoaPodsSpecs(root string) (map[string][]string, error) {
 		}
 		var spec Spec
 		if err := json.NewDecoder(r).Decode(&spec); err != nil {
-			return xerrors.Errorf("failed to decode CocoaPods Spec: %w", err)
+			return eb.With("file_path", path).Wrapf(err, "json decode error")
 		}
 		if spec.Source.Git == "" {
 			return nil
@@ -53,7 +56,7 @@ func walkCocoaPodsSpecs(root string) (map[string][]string, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("error in CocoaPods walk: %w", err)
+		return nil, eb.Wrapf(err, "walk error")
 	}
 	return specs, nil
 }

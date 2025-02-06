@@ -1,10 +1,16 @@
 package vulndb_test
 
 import (
+	"errors"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"k8s.io/utils/clock"
+	fake "k8s.io/utils/clock/testing"
 
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
@@ -13,11 +19,6 @@ import (
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulndb"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"golang.org/x/xerrors"
-	"k8s.io/utils/clock"
-	fake "k8s.io/utils/clock/testing"
 )
 
 type fakeVulnSrc struct{}
@@ -26,7 +27,7 @@ func (f fakeVulnSrc) Name() types.SourceID { return "fake" }
 
 func (f fakeVulnSrc) Update(dir string) error {
 	if strings.Contains(dir, "bad") {
-		return xerrors.New("something bad")
+		return errors.New("something bad")
 	}
 	return nil
 }
@@ -70,7 +71,7 @@ func TestTunnelDB_Insert(t *testing.T) {
 			args: args{
 				targets: []string{"unknown"},
 			},
-			wantErr: "unknown is not supported",
+			wantErr: "target not supported",
 		},
 		{
 			name: "sad path: update error",
@@ -81,7 +82,7 @@ func TestTunnelDB_Insert(t *testing.T) {
 			args: args{
 				targets: []string{"fake"},
 			},
-			wantErr: "fake update error",
+			wantErr: "update error",
 		},
 	}
 
@@ -99,8 +100,7 @@ func TestTunnelDB_Insert(t *testing.T) {
 			c := vulndb.New(cacheDir, outputDir, 12*time.Hour, vulndb.WithClock(tt.fields.clock), vulndb.WithVulnSrcs(vulnsrcs))
 			err := c.Insert(tt.args.targets)
 			if tt.wantErr != "" {
-				require.NotNil(t, err)
-				assert.Contains(t, err.Error(), tt.wantErr)
+				assert.ErrorContains(t, err, tt.wantErr)
 				return
 			}
 			require.NoError(t, err)
@@ -171,7 +171,7 @@ func TestTunnelDB_Build(t *testing.T) {
 				"testdata/fixtures/happy/vulnerability-detail.yaml",
 				"testdata/fixtures/sad/advisory-detail.yaml",
 			},
-			wantErr: "failed to unmarshall the advisory detail",
+			wantErr: "json unmarshal error",
 		},
 		{
 			name: "missing advisory detail",
@@ -192,8 +192,7 @@ func TestTunnelDB_Build(t *testing.T) {
 			full := vulndb.New(cacheDir, dbDir, 12*time.Hour)
 			err := full.Build(nil)
 			if tt.wantErr != "" {
-				require.NotNil(t, err)
-				assert.Contains(t, err.Error(), tt.wantErr)
+				assert.ErrorContains(t, err, tt.wantErr)
 				return
 			}
 			require.NoError(t, err)

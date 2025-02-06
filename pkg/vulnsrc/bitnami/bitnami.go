@@ -5,10 +5,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/samber/oops"
+
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/osv"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
-	"golang.org/x/xerrors"
 )
 
 var bitnamiDir = filepath.Join("bitnami-vulndb", "data")
@@ -34,7 +35,7 @@ type DatabaseSpecific struct {
 func (t *transformer) TransformAdvisories(advs []osv.Advisory, entry osv.Entry) ([]osv.Advisory, error) {
 	var specific DatabaseSpecific
 	if err := json.Unmarshal(entry.DatabaseSpecific, &specific); err != nil {
-		return nil, xerrors.Errorf("JSON decode error: %w", err)
+		return nil, oops.Tags("bitnami").With("vuln_id", entry.ID).With("aliases", entry.Aliases).Wrapf(err, "json decode error")
 	}
 
 	severity := convertSeverity(specific.Severity)

@@ -15,7 +15,6 @@ import (
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/glad"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/govulndb"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/k8svulndb"
-	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/khulnasoft"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/node"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/nvd"
 	oracleoval "github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/oracle-oval"
@@ -67,7 +66,5 @@ var (
 		ghsa.NewVulnSrc(),
 		glad.NewVulnSrc(),
 		govulndb.NewVulnSrc(), // For Go stdlib packages
-
-		aqua.NewVulnSrc(),
 	}
 )

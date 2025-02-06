@@ -3,10 +3,11 @@ package db_test
 import (
 	"testing"
 
-	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
-	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
+	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
 )
 
 func TestConfig_GetRedHatCPEs(t *testing.T) {
@@ -33,7 +34,7 @@ func TestConfig_GetRedHatCPEs(t *testing.T) {
 			name:       "broken value",
 			fixtures:   []string{"testdata/fixtures/redhat-cpe.yaml"},
 			repository: "broken",
-			wantErr:    "JSON unmarshal error",
+			wantErr:    "json unmarshal error",
 		},
 	}
 	for _, tt := range tests {

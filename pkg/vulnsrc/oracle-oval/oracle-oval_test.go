@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
@@ -12,7 +14,6 @@ import (
 	oracleoval "github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/oracle-oval"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrctest"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {
@@ -545,7 +546,7 @@ func TestVulnSrc_Update(t *testing.T) {
 		{
 			name:    "sad path (failed to decode)",
 			dir:     filepath.Join("testdata", "sad"),
-			wantErr: "failed to decode Oracle Linux OVAL JSON",
+			wantErr: "json decode error",
 		},
 	}
 	for _, tt := range tests {
@@ -692,7 +693,7 @@ func TestVulnSrc_Get(t *testing.T) {
 			},
 			version: "8",
 			pkgName: "bind",
-			wantErr: "failed to unmarshal advisory JSON",
+			wantErr: "json unmarshal error",
 		},
 	}
 	for _, tt := range tests {

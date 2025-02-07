@@ -3,9 +3,8 @@ package strings_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils/strings"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUnique(t *testing.T) {

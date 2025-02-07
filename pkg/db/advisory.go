@@ -3,10 +3,9 @@ package db
 import (
 	"encoding/json"
 
+	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/samber/oops"
 	bolt "go.etcd.io/bbolt"
-
-	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 )
 
 func (dbc Config) PutAdvisory(tx *bolt.Tx, bktNames []string, key string, advisory interface{}) error {

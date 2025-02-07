@@ -9,17 +9,16 @@ import (
 	"sort"
 	"strings"
 
-	version "github.com/knqyf263/go-rpm-version"
-	"github.com/samber/lo"
-	"github.com/samber/oops"
-	bolt "go.etcd.io/bbolt"
-	"golang.org/x/exp/maps"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	version "github.com/knqyf263/go-rpm-version"
+	"github.com/samber/lo"
+	"github.com/samber/oops"
+	bolt "go.etcd.io/bbolt"
+	"golang.org/x/exp/maps"
 )
 
 var (

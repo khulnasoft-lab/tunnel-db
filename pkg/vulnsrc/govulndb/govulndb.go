@@ -4,11 +4,10 @@ import (
 	"encoding/json"
 	"path/filepath"
 
-	"github.com/samber/oops"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/osv"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/oops"
 )
 
 const sourceID = vulnerability.GoVulnDB

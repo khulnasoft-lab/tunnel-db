@@ -1,7 +1,8 @@
 run:
   go: '1.23'
   timeout: 5m
-  skip-dirs:
+issues:
+  exclude-dirs:
     - cache
     - assets
 linters:
@@ -18,13 +19,12 @@ linters:
   disable:
     - errcheck
     - ineffassign
-    - structcheck
 linters-settings:
   gci:
     sections:
       - standard
       - default
-      - prefix(github.com/khulnasoft-lab/)
+      - prefix(github.com/khulnasoft/)
       - blank
       - dot
   gomodguard:
@@ -33,8 +33,8 @@ linters-settings:
         - github.com/hashicorp/go-version:
             recommendations:
               - github.com/aquasecurity/go-version
-            reason: "`aquasecurity/go-version` is degisned for our use-cases"
+            reason: "`aquasecurity/go-version` is designed for our use-cases"
         - github.com/Masterminds/semver:
             recommendations:
               - github.com/aquasecurity/go-version
-            reason: "`aquasecurity/go-version` is degisned for our use-cases"
+            reason: "`aquasecurity/go-version` is designed for our use-cases"

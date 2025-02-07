@@ -3,7 +3,6 @@ module github.com/khulnasoft-lab/tunnel-db
 go 1.23
 
 require (
-	github.com/aquasecurity/go-version v0.0.1
 	github.com/briandowns/spinner v1.23.0
 	github.com/fatih/color v1.10.0 // indirect
 	github.com/knqyf263/go-deb-version v0.0.0-20190517075300-09fca494f03d
@@ -24,6 +23,7 @@ require (
 )
 
 require (
+	github.com/aquasecurity/go-version v0.0.1
 	github.com/khulnasoft-lab/bolt-fixtures v0.0.0-20241110174126-88aac252c2ab
 	github.com/khulnasoft-lab/go-gem-version v1.0.0
 	github.com/khulnasoft-lab/go-npm-version v1.0.0

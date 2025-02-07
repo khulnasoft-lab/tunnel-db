@@ -5,9 +5,8 @@ import (
 	"io"
 	"path/filepath"
 
-	"github.com/samber/oops"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils"
+	"github.com/samber/oops"
 )
 
 func ParseDefinitions(dir string) ([]Definition, error) {

@@ -3,10 +3,9 @@ package pkg
 import (
 	"time"
 
-	"github.com/urfave/cli"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc"
+	"github.com/urfave/cli"
 )
 
 type AppConfig struct{}

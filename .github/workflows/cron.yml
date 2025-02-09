@@ -107,4 +107,3 @@ jobs:
           done
             
           echo "Artifact upload process completed."
-tunnel

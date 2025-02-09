@@ -6,12 +6,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/samber/oops"
-	"golang.org/x/tools/go/packages"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/osv"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/oops"
+	"golang.org/x/tools/go/packages"
 )
 
 const (

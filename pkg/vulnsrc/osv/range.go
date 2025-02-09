@@ -3,14 +3,13 @@ package osv
 import (
 	"fmt"
 
-	mvn "github.com/masahiro331/go-mvn-version"
-	"github.com/samber/oops"
-
 	"github.com/aquasecurity/go-version/pkg/semver"
 	"github.com/aquasecurity/go-version/pkg/version"
 	"github.com/khulnasoft-lab/go-gem-version"
 	npm "github.com/khulnasoft-lab/go-npm-version/pkg"
 	pep440 "github.com/khulnasoft-lab/go-pep440-version"
+	mvn "github.com/masahiro331/go-mvn-version"
+	"github.com/samber/oops"
 )
 
 type VersionRange interface {

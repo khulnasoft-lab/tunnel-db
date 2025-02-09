@@ -6,14 +6,13 @@ import (
 	"io"
 	"path/filepath"
 
-	"github.com/samber/oops"
-	bolt "go.etcd.io/bbolt"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/oops"
+	bolt "go.etcd.io/bbolt"
 )
 
 const (

@@ -6,11 +6,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrctest"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {

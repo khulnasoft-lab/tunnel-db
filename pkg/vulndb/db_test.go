@@ -7,11 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"k8s.io/utils/clock"
-	fake "k8s.io/utils/clock/testing"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/metadata"
@@ -19,6 +14,10 @@ import (
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulndb"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"k8s.io/utils/clock"
+	fake "k8s.io/utils/clock/testing"
 )
 
 type fakeVulnSrc struct{}

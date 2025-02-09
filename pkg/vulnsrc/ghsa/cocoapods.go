@@ -5,12 +5,11 @@ import (
 	"io"
 	"path/filepath"
 
-	"github.com/samber/oops"
-	"golang.org/x/exp/slices"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/oops"
+	"golang.org/x/exp/slices"
 )
 
 // Spec is cocoapods struct

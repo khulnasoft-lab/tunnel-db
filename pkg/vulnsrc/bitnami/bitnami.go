@@ -5,11 +5,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/samber/oops"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/osv"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/oops"
 )
 
 var bitnamiDir = filepath.Join("bitnami-vulndb", "data")

@@ -8,19 +8,18 @@ import (
 	"strings"
 	"time"
 
-	gocvss30 "github.com/pandatix/go-cvss/30"
-	gocvss31 "github.com/pandatix/go-cvss/31"
-	"github.com/samber/lo"
-	"github.com/samber/oops"
-	bolt "go.etcd.io/bbolt"
-	"golang.org/x/exp/maps"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/utils"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/bucket"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	gocvss30 "github.com/pandatix/go-cvss/30"
+	gocvss31 "github.com/pandatix/go-cvss/31"
+	"github.com/samber/lo"
+	"github.com/samber/oops"
+	bolt "go.etcd.io/bbolt"
+	"golang.org/x/exp/maps"
 )
 
 type Advisory struct {

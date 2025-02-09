@@ -7,9 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/samber/oops"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
+	"github.com/samber/oops"
 )
 
 func FileWalk(root string, walkFn func(r io.Reader, path string) error) error {

@@ -6,14 +6,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/samber/oops"
-	bolt "go.etcd.io/bbolt"
-	"gopkg.in/yaml.v2"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/bucket"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/oops"
+	bolt "go.etcd.io/bbolt"
+	"gopkg.in/yaml.v2"
 )
 
 const bundlerDir = "ruby-advisory-db"

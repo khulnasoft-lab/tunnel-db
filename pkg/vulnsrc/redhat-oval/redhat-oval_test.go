@@ -6,9 +6,6 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
@@ -16,6 +13,8 @@ import (
 	redhat "github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/redhat-oval"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrctest"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {

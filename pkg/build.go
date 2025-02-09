@@ -1,11 +1,10 @@
 package pkg
 
 import (
-	"github.com/samber/oops"
-	"github.com/urfave/cli"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulndb"
+	"github.com/samber/oops"
+	"github.com/urfave/cli"
 )
 
 func build(c *cli.Context) error {

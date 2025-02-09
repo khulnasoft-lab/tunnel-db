@@ -3,16 +3,15 @@ package vulndb
 import (
 	"time"
 
-	"github.com/samber/oops"
-	bolt "go.etcd.io/bbolt"
-	"k8s.io/utils/clock"
-
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/metadata"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/oops"
+	bolt "go.etcd.io/bbolt"
+	"k8s.io/utils/clock"
 )
 
 type VulnDB interface {

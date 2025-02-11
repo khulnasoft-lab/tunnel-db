@@ -252,7 +252,7 @@ func TestVulnSrc_Update(t *testing.T) {
 			name:    "sad path (failed to decode)",
 			dir:     filepath.Join("testdata", "sad"),
 			dist:    OpenSUSE,
-			wantErr: "failed to decode SUSE CVRF JSON",
+			wantErr: "json decode error",
 		},
 	}
 	for _, tt := range tests {
@@ -304,7 +304,7 @@ func TestVulnSrc_Get(t *testing.T) {
 			version:  "13.1",
 			pkgName:  "bind",
 			dist:     OpenSUSE,
-			wantErr:  "failed to unmarshal advisory JSON",
+			wantErr:  "json unmarshal error",
 		},
 	}
 	for _, tt := range tests {
@@ -648,7 +648,8 @@ func TestGetOSVersion(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.inputPlatformName, func(t *testing.T) {
-			actual := getOSVersion(tc.inputPlatformName)
+			vs := NewVulnSrc(OpenSUSE)
+			actual := vs.getOSVersion(tc.inputPlatformName)
 			assert.Equal(t, tc.expectedPlatformName, actual, fmt.Sprintf("input data: %s", tc.inputPlatformName))
 		})
 	}

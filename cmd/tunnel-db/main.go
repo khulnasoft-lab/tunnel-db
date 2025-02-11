@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/khulnasoft-lab/tunnel-db/pkg"
+	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 )
 
 var (
@@ -16,6 +16,7 @@ func main() {
 	app := ac.NewApp(version)
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatalf("%+v", err)
+		log.Errorf("%+v", err)
+		os.Exit(1)
 	}
 }

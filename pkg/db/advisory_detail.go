@@ -77,3 +77,28 @@ func (dbc Config) saveAdvisories(tx *bolt.Tx, bkt *bolt.Bucket, bktNames []strin
 func (dbc Config) DeleteAdvisoryDetailBucket() error {
 	return dbc.deleteBucket(advisoryDetailBucket)
 }
+
+// CreateIndexes creates indexes on key fields for advisory details
+func (dbc Config) CreateIndexes(tx *bolt.Tx) error {
+	// Example: Create an index on the "advisory-detail" bucket
+	advisoryDetailBucket := tx.Bucket([]byte(advisoryDetailBucket))
+	if advisoryDetailBucket == nil {
+		return oops.Errorf("advisory-detail bucket not found")
+	}
+
+	// Create an index on the "vulnID" field
+	err := advisoryDetailBucket.ForEach(func(k, v []byte) error {
+		var advisory map[string]interface{}
+		if err := json.Unmarshal(v, &advisory); err != nil {
+			return oops.Wrapf(err, "json unmarshal error")
+		}
+
+		indexKey := []byte(advisory["vulnID"].(string) + ":" + string(k))
+		return advisoryDetailBucket.Put(indexKey, v)
+	})
+	if err != nil {
+		return oops.Wrapf(err, "failed to create index on vulnID")
+	}
+
+	return nil
+}

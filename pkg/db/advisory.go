@@ -49,3 +49,28 @@ func (dbc Config) GetAdvisories(source, pkgName string) ([]types.Advisory, error
 	}
 	return results, nil
 }
+
+// CreateIndexes creates indexes on key fields for advisories
+func (dbc Config) CreateIndexes(tx *bolt.Tx) error {
+	// Example: Create an index on the "advisory" bucket
+	advisoryBucket := tx.Bucket([]byte("advisory"))
+	if advisoryBucket == nil {
+		return oops.Errorf("advisory bucket not found")
+	}
+
+	// Create an index on the "vulnID" field
+	err := advisoryBucket.ForEach(func(k, v []byte) error {
+		var advisory map[string]interface{}
+		if err := json.Unmarshal(v, &advisory); err != nil {
+			return oops.Wrapf(err, "json unmarshal error")
+		}
+
+		indexKey := []byte(advisory["vulnID"].(string) + ":" + string(k))
+		return advisoryBucket.Put(indexKey, v)
+	})
+	if err != nil {
+		return oops.Wrapf(err, "failed to create index on vulnID")
+	}
+
+	return nil
+}

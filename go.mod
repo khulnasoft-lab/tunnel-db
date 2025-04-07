@@ -1,6 +1,7 @@
 module github.com/khulnasoft-lab/tunnel-db
 
 go 1.23
+toolchain go1.24.1
 
 require (
 	github.com/briandowns/spinner v1.23.0
@@ -15,7 +16,7 @@ require (
 	github.com/urfave/cli v1.22.16
 	go.etcd.io/bbolt v1.4.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
-	golang.org/x/text v0.22.0
+	golang.org/x/text v0.24.0
 	golang.org/x/tools v0.29.0
 	gopkg.in/cheggaaa/pb.v1 v1.0.28
 	gopkg.in/yaml.v2 v2.4.0
@@ -48,7 +49,7 @@ require (
 	go.opentelemetry.io/otel v1.34.0 // indirect
 	go.opentelemetry.io/otel/trace v1.34.0 // indirect
 	golang.org/x/mod v0.22.0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/term v0.1.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect

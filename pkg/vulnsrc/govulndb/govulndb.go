@@ -7,6 +7,7 @@ import (
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/osv"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
+	"github.com/samber/lo"
 	"github.com/samber/oops"
 )
 
@@ -42,6 +43,20 @@ func (VulnDB) Update(root string) error {
 
 type transformer struct{}
 
+// PostParseAffected parses the affected[].ecosystem_specific.imports[] field for goos and goarch.
+func (t *transformer) PostParseAffected(advisory osv.Advisory, affected osv.Affected) (osv.Advisory, error) {
+	var oses, arches []string
+	for _, imp := range affected.EcosystemSpecific.Imports {
+		oses = append(oses, imp.GOOS...)
+		arches = append(arches, imp.GOARCH...)
+	}
+
+	advisory.OSes = lo.Uniq(oses)
+	advisory.Arches = lo.Uniq(arches)
+
+	return advisory, nil
+}
+
 func (t *transformer) TransformAdvisories(advisories []osv.Advisory, entry osv.Entry) ([]osv.Advisory, error) {
 	var specific DatabaseSpecific
 	if err := json.Unmarshal(entry.DatabaseSpecific, &specific); err != nil {
@@ -58,6 +73,7 @@ func (t *transformer) TransformAdvisories(advisories []osv.Advisory, entry osv.E
 		if specific.URL != "" {
 			adv.References = append(adv.References, specific.URL)
 		}
+
 		filtered = append(filtered, adv)
 	}
 

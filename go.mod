@@ -19,7 +19,7 @@ require (
 	golang.org/x/tools v0.29.0
 	gopkg.in/cheggaaa/pb.v1 v1.0.28
 	gopkg.in/yaml.v2 v2.4.0
-	k8s.io/utils v0.0.0-20201110183641-67b214c5f920
+	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
 )
 
 require (

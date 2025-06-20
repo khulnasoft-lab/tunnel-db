@@ -12,7 +12,7 @@ require (
 	github.com/samber/lo v1.50.0
 	github.com/samber/oops v1.15.0
 	github.com/stretchr/testify v1.10.0
-	github.com/urfave/cli v1.22.16
+	github.com/urfave/cli v1.22.17
 	go.etcd.io/bbolt v1.4.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 	golang.org/x/text v0.22.0
@@ -31,7 +31,7 @@ require (
 )
 
 require (
-	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/goccy/go-yaml v1.8.1 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect

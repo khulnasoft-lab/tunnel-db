@@ -67,7 +67,7 @@ type Suse struct {
 
 func NewVulnSrc(dist Distribution) *VulnSrc {
 	return &VulnSrc{
-		DB:     &Suse{Operation: db.Config{}},
+		DB:     &Suse{Operation: db.NewConfig()},
 		dist:   dist,
 		logger: log.WithPrefix("suse-cvrf"),
 	}

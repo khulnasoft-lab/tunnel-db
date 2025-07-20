@@ -329,7 +329,6 @@ func (vs VulnSrc) parseOVALStream(dir string, uniqCPEs CPEMap) (map[bucket]Defin
 		advisories = append(advisories, definition)
 		return nil
 	})
-
 	if err != nil {
 		return nil, eb.Wrapf(err, "oval walk error")
 	}

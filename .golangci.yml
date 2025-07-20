@@ -13,7 +13,7 @@ linters:
     - unused
     - gci
     - gomodguard
-    - tenv
+    - usetesting
     - gosimple
     - govet
   disable:

@@ -23,7 +23,6 @@ func ConstructVersion(epoch, version, release string) string {
 
 	if release != "" {
 		verStr += fmt.Sprintf("-%s", release)
-
 	}
 	return verStr
 }

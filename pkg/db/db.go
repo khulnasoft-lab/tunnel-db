@@ -14,11 +14,15 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
-type CustomPut func(dbc Operation, tx *bolt.Tx, adv interface{}) error
+type CustomPut func(dbc Operation, tx *bolt.Tx, adv any) error
 
 const SchemaVersion = 2
 
 var db *bolt.DB
+
+type Getter interface {
+	Get(osVer, pkgName string) ([]types.Advisory, error)
+}
 
 type Operation interface {
 	BatchUpdate(fn func(*bolt.Tx) error) (err error)
@@ -38,7 +42,7 @@ type Operation interface {
 	GetVulnerability(vulnerabilityID string) (vulnerability types.Vulnerability, err error)
 
 	SaveAdvisoryDetails(tx *bolt.Tx, cveID string) (err error)
-	PutAdvisoryDetail(tx *bolt.Tx, vulnerabilityID, pkgName string, nestedBktNames []string, advisory interface{}) (err error)
+	PutAdvisoryDetail(tx *bolt.Tx, vulnerabilityID, pkgName string, nestedBktNames []string, advisory any) (err error)
 	DeleteAdvisoryDetailBucket() error
 
 	PutDataSource(tx *bolt.Tx, bktName string, source types.DataSource) (err error)
@@ -72,7 +76,7 @@ func Init(dbDir string, opts ...Option) (err error) {
 	}
 
 	eb := oops.With("db_dir", dbDir)
-	if err = os.MkdirAll(dbDir, 0700); err != nil {
+	if err = os.MkdirAll(dbDir, 0o700); err != nil {
 		return eb.Wrapf(err, "failed to mkdir")
 	}
 	dbPath := Path(dbDir)
@@ -86,12 +90,12 @@ func Init(dbDir string, opts ...Option) (err error) {
 			if err = os.Remove(dbPath); err != nil {
 				return
 			}
-			db, err = bolt.Open(dbPath, 0644, dbOptions.boltOptions)
+			db, err = bolt.Open(dbPath, 0o644, dbOptions.boltOptions)
 		}
 		debug.SetPanicOnFault(false)
 	}()
 
-	db, err = bolt.Open(dbPath, 0644, dbOptions.boltOptions)
+	db, err = bolt.Open(dbPath, 0o644, dbOptions.boltOptions)
 	if err != nil {
 		return eb.Wrapf(err, "failed to open db")
 	}
@@ -126,7 +130,7 @@ func (dbc Config) BatchUpdate(fn func(tx *bolt.Tx) error) error {
 	return nil
 }
 
-func (dbc Config) put(tx *bolt.Tx, bktNames []string, key string, value interface{}) error {
+func (dbc Config) put(tx *bolt.Tx, bktNames []string, key string, value any) error {
 	if len(bktNames) == 0 {
 		return oops.Errorf("empty bucket name")
 	}

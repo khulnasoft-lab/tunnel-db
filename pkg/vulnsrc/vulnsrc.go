@@ -11,6 +11,7 @@ import (
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/chainguard"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/composer"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/debian"
+	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/echo"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/ghsa"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/glad"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/govulndb"
@@ -32,39 +33,38 @@ type VulnSrc interface {
 	Update(dir string) (err error)
 }
 
-var (
-	// All holds all data sources
-	All = []VulnSrc{
-		// NVD
-		nvd.NewVulnSrc(),
+// All holds all data sources
+var All = []VulnSrc{
+	// NVD
+	nvd.NewVulnSrc(),
 
-		// OS packages
-		alma.NewVulnSrc(),
-		alpine.NewVulnSrc(),
-		redhat.NewVulnSrc(),
-		redhatoval.NewVulnSrc(),
-		debian.NewVulnSrc(),
-		ubuntu.NewVulnSrc(),
-		amazon.NewVulnSrc(),
-		oracleoval.NewVulnSrc(),
-		rocky.NewVulnSrc(),
-		susecvrf.NewVulnSrc(susecvrf.SUSEEnterpriseLinux),
-		susecvrf.NewVulnSrc(susecvrf.OpenSUSE),
-		photon.NewVulnSrc(),
-		azure.NewVulnSrc(azure.Azure),
-		azure.NewVulnSrc(azure.Mariner),
-		wolfi.NewVulnSrc(),
-		chainguard.NewVulnSrc(),
-		bitnami.NewVulnSrc(),
+	// OS packages
+	alma.NewVulnSrc(),
+	alpine.NewVulnSrc(),
+	redhat.NewVulnSrc(),
+	redhatoval.NewVulnSrc(),
+	debian.NewVulnSrc(),
+	ubuntu.NewVulnSrc(),
+	amazon.NewVulnSrc(),
+	oracleoval.NewVulnSrc(),
+	rocky.NewVulnSrc(),
+	susecvrf.NewVulnSrc(susecvrf.SUSEEnterpriseLinux),
+	susecvrf.NewVulnSrc(susecvrf.OpenSUSE),
+	photon.NewVulnSrc(),
+	azure.NewVulnSrc(azure.Azure),
+	azure.NewVulnSrc(azure.Mariner),
+	wolfi.NewVulnSrc(),
+	chainguard.NewVulnSrc(),
+	bitnami.NewVulnSrc(),
 
-		k8svulndb.NewVulnSrc(),
+	k8svulndb.NewVulnSrc(),
 
-		// Language-specific packages
-		bundler.NewVulnSrc(),
-		composer.NewVulnSrc(),
-		node.NewVulnSrc(),
-		ghsa.NewVulnSrc(),
-		glad.NewVulnSrc(),
-		govulndb.NewVulnSrc(), // For Go stdlib packages
-	}
-)
+	// Language-specific packages
+	bundler.NewVulnSrc(),
+	composer.NewVulnSrc(),
+	node.NewVulnSrc(),
+	ghsa.NewVulnSrc(),
+	glad.NewVulnSrc(),
+	govulndb.NewVulnSrc(), // For Go stdlib packages
+	echo.NewVulnSrc(),
+}

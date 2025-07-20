@@ -14,7 +14,6 @@ func TestUnique(t *testing.T) {
 		want  []string
 	}{
 		{
-
 			name: "positive test",
 			input: []string{
 				"test string 1",
@@ -52,5 +51,4 @@ func TestUnique(t *testing.T) {
 		actualData := strings.Unique(tt.input)
 		assert.Equal(t, actualData, tt.want, tt.name)
 	}
-
 }

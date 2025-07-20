@@ -19,13 +19,11 @@ const (
 	platformName = "archlinux"
 )
 
-var (
-	source = types.DataSource{
-		ID:   vulnerability.ArchLinux,
-		Name: "Arch Linux Vulnerable issues",
-		URL:  "https://security.archlinux.org/",
-	}
-)
+var source = types.DataSource{
+	ID:   vulnerability.ArchLinux,
+	Name: "Arch Linux Vulnerable issues",
+	URL:  "https://security.archlinux.org/",
+}
 
 type VulnSrc struct {
 	dbc db.Operation
@@ -94,7 +92,6 @@ func (vs VulnSrc) commit(tx *bolt.Tx, avgs []ArchVulnGroup) error {
 				if err := vs.dbc.PutAdvisoryDetail(tx, cveId, pkg, []string{platformName}, advisory); err != nil {
 					return oops.Wrapf(err, "failed to save advisory")
 				}
-
 			}
 			vuln := types.VulnerabilityDetail{
 				Severity: convertSeverity(avg.Severity),

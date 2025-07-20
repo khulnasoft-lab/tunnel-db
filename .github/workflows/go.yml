@@ -1,6 +1,10 @@
 ---
 name: Go
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  pull_request_target:
+    types: [labeled]
 permissions:
   contents: read
 
@@ -10,6 +14,7 @@ jobs:
       contents: read  # for actions/checkout to fetch code
       pull-requests: read  # for golangci/golangci-lint-action to fetch pull requests
     name: Test
+    if: github.event.label.name == 'queue'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)

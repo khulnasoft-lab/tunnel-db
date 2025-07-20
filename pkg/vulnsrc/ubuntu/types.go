@@ -9,9 +9,11 @@ type UbuntuCVE struct {
 	PublicDate  string // for extensibility, not used in tunnel-db
 }
 
-type PackageName string
-type Release string
-type Patch map[Release]Status
+type (
+	PackageName string
+	Release     string
+	Patch       map[Release]Status
+)
 
 type Status struct {
 	Status string

@@ -111,7 +111,7 @@ func (t *transformer) TransformAdvisories(advisories []osv.Advisory, entry osv.E
 	for i, adv := range advisories {
 		eb := oops.With("ecosystem", adv.Ecosystem).With("package_name", adv.PkgName).With("vuln_id", adv.VulnerabilityID).With("aliases", adv.Aliases)
 		// Parse database_specific
-		if err := parseDatabaseSpecific(adv); err != nil {
+		if err := parseDatabaseSpecific(&adv); err != nil {
 			return nil, eb.Wrapf(err, "failed to parse database specific")
 		}
 
@@ -142,7 +142,7 @@ func (t *transformer) TransformAdvisories(advisories []osv.Advisory, entry osv.E
 
 // parseDatabaseSpecific adds a version from the last_known_affected_version_range field
 // cf. https://github.com/github/advisory-database/issues/470#issuecomment-1998604377
-func parseDatabaseSpecific(advisory osv.Advisory) error {
+func parseDatabaseSpecific(advisory *osv.Advisory) error {
 	// Skip if the `affected[].database_specific` field doesn't exist
 	if advisory.DatabaseSpecific == nil {
 		return nil
@@ -153,16 +153,31 @@ func parseDatabaseSpecific(advisory osv.Advisory) error {
 		return oops.Wrapf(err, "json unmarshal error")
 	}
 
-	for i, vulnVersion := range advisory.VulnerableVersions {
-		// The fixed and last_affected fields (which use <, <=, or =) take precedence over
-		// the last_known_affected_version_range field.
-		if strings.Contains(vulnVersion, "<") || strings.HasPrefix(vulnVersion, "=") {
-			continue
+	if affectedSpecific.LastKnownAffectedVersionRange == "" {
+		return nil
+	}
+
+	// `last_known_affected_version_range` uses `< version` or `<= version` formats (e.g. `< 1.2.3` or `<= 1.2.3`).
+	// Remove spaces to match our format
+	verRange := strings.ReplaceAll(affectedSpecific.LastKnownAffectedVersionRange, " ", "")
+
+	// If VulnerableVersions is empty, populate it with the last_known_affected_version_range
+	if len(advisory.VulnerableVersions) == 0 {
+		advisory.VulnerableVersions = []string{verRange}
+		return nil
+	}
+
+	// Otherwise, append it if no explicit ranges are present
+	foundExplicitRange := false
+	for _, v := range advisory.VulnerableVersions {
+		if strings.Contains(v, "<") || strings.HasPrefix(v, "=") {
+			foundExplicitRange = true
+			break
 		}
-		// `last_known_affected_version_range` uses `< version` or `<= version` formats (e.g. `< 1.2.3` or `<= 1.2.3`).
-		// Remove spaces to match our format
-		verRange := strings.ReplaceAll(affectedSpecific.LastKnownAffectedVersionRange, " ", "")
-		advisory.VulnerableVersions[i] = fmt.Sprintf("%s, %s", vulnVersion, verRange)
+	}
+
+	if !foundExplicitRange {
+		advisory.VulnerableVersions = append(advisory.VulnerableVersions, verRange)
 	}
 	return nil
 }

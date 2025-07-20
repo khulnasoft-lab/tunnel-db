@@ -19,13 +19,11 @@ const (
 	distroName = "wolfi"
 )
 
-var (
-	source = types.DataSource{
-		ID:   vulnerability.Wolfi,
-		Name: "Wolfi Secdb",
-		URL:  "https://packages.wolfi.dev/os/security.json",
-	}
-)
+var source = types.DataSource{
+	ID:   vulnerability.Wolfi,
+	Name: "Wolfi Secdb",
+	URL:  "https://packages.wolfi.dev/os/security.json",
+}
 
 type VulnSrc struct {
 	dbc db.Operation

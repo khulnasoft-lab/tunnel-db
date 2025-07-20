@@ -50,6 +50,7 @@ var (
 		"mantic":   "23.10",
 		"noble":    "24.04",
 		"oracular": "24.10",
+		"plucky":   "25.04",
 		// ESM versions:
 		"precise/esm": "12.04-ESM",
 		"trusty/esm":  "14.04-ESM",
@@ -88,7 +89,7 @@ type VulnSrc struct {
 func NewVulnSrc(opts ...Option) VulnSrc {
 	src := VulnSrc{
 		put:    defaultPut,
-		dbc:    db.Config{},
+		dbc:    db.Operation(db.Config{}),
 		logger: log.WithPrefix("ubuntu"),
 	}
 

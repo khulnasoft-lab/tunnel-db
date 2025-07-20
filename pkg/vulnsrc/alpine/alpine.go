@@ -35,7 +35,7 @@ type VulnSrc struct {
 
 func NewVulnSrc() VulnSrc {
 	return VulnSrc{
-		dbc: db.Config{},
+		dbc: db.Operation(db.Config{}),
 	}
 }
 

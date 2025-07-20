@@ -24,7 +24,6 @@ func HasIntersection(list1, list2 []int) bool {
 				return true
 			}
 		}
-
 	}
 	return false
 }

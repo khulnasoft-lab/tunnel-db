@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
+	"github.com/samber/lo"
 	"github.com/samber/oops"
 	bolt "go.etcd.io/bbolt"
 )
 
-func (dbc Config) PutAdvisory(tx *bolt.Tx, bktNames []string, key string, advisory interface{}) error {
+func (dbc Config) PutAdvisory(tx *bolt.Tx, bktNames []string, key string, advisory any) error {
 	if err := dbc.put(tx, bktNames, key, advisory); err != nil {
 		return oops.With("key", key).Wrapf(err, "failed to put advisory")
 	}
@@ -37,11 +38,12 @@ func (dbc Config) GetAdvisories(source, pkgName string) ([]types.Advisory, error
 		}
 
 		advisory.VulnerabilityID = vulnID
-		if v.Source != (types.DataSource{}) {
+		if !lo.IsEmpty(v.Source) {
 			advisory.DataSource = &types.DataSource{
-				ID:   v.Source.ID,
-				Name: v.Source.Name,
-				URL:  v.Source.URL,
+				ID:     v.Source.ID,
+				Name:   v.Source.Name,
+				URL:    v.Source.URL,
+				BaseID: v.Source.BaseID,
 			}
 		}
 

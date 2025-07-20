@@ -18,8 +18,10 @@ const (
 	EcosystemNuGet     Ecosystem = "NuGet"
 )
 
-type Ecosystem string
-type RangeType string
+type (
+	Ecosystem string
+	RangeType string
+)
 
 type Package struct {
 	Name      string    `json:"name"`

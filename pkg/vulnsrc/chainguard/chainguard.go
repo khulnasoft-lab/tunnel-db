@@ -19,13 +19,11 @@ const (
 	distroName    = "chainguard"
 )
 
-var (
-	source = types.DataSource{
-		ID:   vulnerability.Chainguard,
-		Name: "Chainguard Security Data",
-		URL:  "https://packages.cgr.dev/chainguard/security.json",
-	}
-)
+var source = types.DataSource{
+	ID:   vulnerability.Chainguard,
+	Name: "Chainguard Security Data",
+	URL:  "https://packages.cgr.dev/chainguard/security.json",
+}
 
 type VulnSrc struct {
 	dbc db.Operation

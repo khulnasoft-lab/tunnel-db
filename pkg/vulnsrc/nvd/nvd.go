@@ -82,6 +82,10 @@ func (vs *VulnSrc) Update(dir string) error {
 
 func (vs *VulnSrc) commit(tx *bolt.Tx, cves []Cve) error {
 	for _, cve := range cves {
+		// Skip rejected CVEs
+		if isRejected(cve.Descriptions) {
+			continue
+		}
 		if err := vs.Put(tx, cve); err != nil {
 			return err
 		}
@@ -98,6 +102,15 @@ func (vs *VulnSrc) save(cves []Cve) error {
 		return oops.Wrapf(err, "error in batch update")
 	}
 	return nil
+}
+
+func isRejected(descriptions []LangString) bool {
+	for _, desc := range descriptions {
+		if strings.Contains(desc.Value, vulnerability.RejectVulnerability) {
+			return true
+		}
+	}
+	return false
 }
 
 // getCvssV2 selects vector, score and severity from V2 metrics

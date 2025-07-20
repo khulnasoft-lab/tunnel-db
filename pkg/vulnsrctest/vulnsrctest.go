@@ -39,7 +39,7 @@ func TestUpdate(t *testing.T, vulnsrc Updater, args TestUpdateArgs) {
 
 	err = vulnsrc.Update(args.Dir)
 	if args.WantErr != "" {
-		require.NotNil(t, err)
+		require.Error(t, err)
 		assert.Contains(t, err.Error(), args.WantErr)
 		return
 	}
@@ -85,6 +85,6 @@ func TestGet(t *testing.T, vulnsrc Getter, args TestGetArgs) {
 		return got[i].VulnerabilityID < got[j].VulnerabilityID
 	})
 
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, args.WantValues, got)
 }

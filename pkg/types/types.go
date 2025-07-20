@@ -34,15 +34,13 @@ const (
 	SeverityCritical
 )
 
-var (
-	SeverityNames = []string{
-		"UNKNOWN",
-		"LOW",
-		"MEDIUM",
-		"HIGH",
-		"CRITICAL",
-	}
-)
+var SeverityNames = []string{
+	"UNKNOWN",
+	"LOW",
+	"MEDIUM",
+	"HIGH",
+	"CRITICAL",
+}
 
 func NewSeverity(severity string) (Severity, error) {
 	for i, name := range SeverityNames {
@@ -98,6 +96,10 @@ type DataSource struct {
 	ID   SourceID `json:",omitempty"`
 	Name string   `json:",omitempty"`
 	URL  string   `json:",omitempty"`
+
+	// BaseID shows Base source of advisories.
+	// e.g. `Root.io` based on Debian/Ubuntu/Alpine advisories.
+	BaseID SourceID `json:",omitzero"`
 }
 
 type Advisory struct {

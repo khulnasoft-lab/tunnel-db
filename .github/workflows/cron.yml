@@ -20,7 +20,7 @@ jobs:
           egress-policy: audit
 
       - name: Maximize build space
-        uses: easimon/maximize-build-space@fc881a613ad2a34aca9c9624518214ebc21dfc0c # v10
+        uses: AdityaGarg8/remove-unwanted-software@main
         with:
           root-reserve-mb: 32768
           remove-android: "true"

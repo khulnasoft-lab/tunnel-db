@@ -180,7 +180,6 @@ func (vs VulnSrc) parseBug(dir string, fn func(bug) error) error {
 		}
 		return nil
 	})
-
 	if err != nil {
 		return eb.Wrapf(err, "walk error")
 	}
@@ -556,7 +555,7 @@ func (vs VulnSrc) parseDistributions(rootDir string) error {
 	for dist, val := range parsed {
 		if val.MajorVersion == "" {
 			// Empty code refers to sid(development) codeName
-			//vs.distributions[dist] = defaultCode
+			// vs.distributions[dist] = defaultCode
 			continue
 		}
 		vs.distributions[dist] = val.MajorVersion

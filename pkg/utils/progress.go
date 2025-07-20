@@ -7,9 +7,7 @@ import (
 	pb "gopkg.in/cheggaaa/pb.v1"
 )
 
-var (
-	Quiet = false
-)
+var Quiet = false
 
 type Spinner struct {
 	client *spinner.Spinner
@@ -30,6 +28,7 @@ func (s *Spinner) Start() {
 	}
 	s.client.Start()
 }
+
 func (s *Spinner) Stop() {
 	if s.client == nil {
 		return
@@ -56,6 +55,7 @@ func (p *ProgressBar) Increment() {
 	}
 	p.client.Increment()
 }
+
 func (p *ProgressBar) Finish() {
 	if p.client == nil {
 		return

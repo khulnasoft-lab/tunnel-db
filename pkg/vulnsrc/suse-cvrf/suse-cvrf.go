@@ -43,16 +43,22 @@ var (
 )
 
 type VulnSrc struct {
-	dist   Distribution
-	dbc    db.Operation
-	logger *log.Logger
+	dist            Distribution
+	dbc             db.Operation
+	logger          *log.Logger
+	osVersionParser OSVersionParser
 }
 
 func NewVulnSrc(dist Distribution) VulnSrc {
+	logger := log.WithPrefix("suse-cvrf")
 	return VulnSrc{
 		dist:   dist,
 		dbc:    db.Config{},
-		logger: log.WithPrefix("suse-cvrf"),
+		logger: logger,
+		osVersionParser: suseOSVersionParser{
+			logger: logger,
+			dist:   dist,
+		},
 	}
 }
 
@@ -169,7 +175,7 @@ func (vs VulnSrc) commit(tx *bolt.Tx, cvrfs []SuseCvrf) error {
 func (vs VulnSrc) getAffectedPackages(relationships []Relationship) []AffectedPackage {
 	var pkgs []AffectedPackage
 	for _, relationship := range relationships {
-		osVer := vs.getOSVersion(relationship.RelatesToProductReference)
+		osVer := vs.osVersionParser.ParseOSVersion(relationship.RelatesToProductReference)
 		if osVer == "" {
 			continue
 		}
@@ -260,6 +266,86 @@ func (vs VulnSrc) getOSVersion(platformName string) string {
 	return ""
 }
 
+type OSVersionParser interface {
+	ParseOSVersion(platformName string) string
+}
+
+type suseOSVersionParser struct {
+	logger *log.Logger
+	dist   Distribution
+}
+
+func (p suseOSVersionParser) ParseOSVersion(platformName string) string {
+	if strings.Contains(platformName, "SUSE Manager") {
+		// SUSE Linux Enterprise Module for SUSE Manager Server 4.0
+		return ""
+	}
+	if strings.HasPrefix(platformName, "openSUSE Tumbleweed") {
+		// Tumbleweed has no version, it is a rolling release
+		return platformOpenSUSETumbleweedFormat
+	}
+	if strings.HasPrefix(platformName, "openSUSE Leap") {
+		// openSUSE Leap 15.0
+		ss := strings.Split(platformName, " ")
+		if len(ss) < 3 {
+			p.logger.Warn("Invalid version", log.String("platform", platformName))
+			return ""
+		}
+		if _, err := version.Parse(ss[2]); err != nil {
+			p.logger.Warn("Invalid version",
+				log.String("platform", platformName),
+				log.Err(err))
+			return ""
+		}
+		return fmt.Sprintf(platformOpenSUSELeapFormat, ss[2])
+	}
+	if strings.HasPrefix(platformName, "SUSE Linux Enterprise Micro") {
+		// SUSE Linux Enterprise Micro 5.3
+		ss := strings.Split(platformName, " ")
+		if len(ss) < 5 {
+			p.logger.Warn("Invalid version", log.String("platform", platformName))
+			return ""
+		}
+		if _, err := version.Parse(ss[4]); err != nil {
+			p.logger.Warn("Invalid version",
+				log.String("platform", platformName),
+				log.Err(err))
+			return ""
+		}
+		return fmt.Sprintf(platformSUSELinuxEnterpriseMicroFormat, ss[4])
+	}
+	if strings.Contains(platformName, "SUSE Linux Enterprise") {
+		// e.g. SUSE Linux Enterprise Storage 7
+		if strings.HasPrefix(platformName, "SUSE Linux Enterprise Storage") {
+			return ""
+		}
+
+		ss := strings.Fields(strings.ReplaceAll(platformName, "-", " "))
+		versions := make([]string, 0, 2)
+		for i := len(ss) - 1; i > 0; i-- {
+			v, err := strconv.Atoi(strings.TrimPrefix(ss[i], "SP"))
+			if err != nil {
+				continue
+			}
+			versions = append(versions, fmt.Sprintf("%d", v))
+			if len(versions) == 2 {
+				break
+			}
+		}
+		switch len(versions) {
+		case 0:
+			p.logger.Warn("Failed to detect version", log.String("platform", platformName))
+			return ""
+		case 1:
+			return fmt.Sprintf(platformSUSELinuxFormat, versions[0])
+		case 2:
+			return fmt.Sprintf(platformSUSELinuxFormat, fmt.Sprintf("%s.%s", versions[1], versions[0]))
+		}
+	}
+
+	return ""
+}
+
 func getDetail(notes []DocumentNote) string {
 	for _, n := range notes {
 		if n.Type == "General" && n.Title == "Details" {
@@ -322,6 +408,7 @@ func (vs VulnSrc) Get(version string, pkgName string) ([]types.Advisory, error) 
 	}
 	return advisories, nil
 }
+
 func severityFromThreat(sev string) types.Severity {
 	switch sev {
 	case "low":

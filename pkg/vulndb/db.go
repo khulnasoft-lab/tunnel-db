@@ -153,7 +153,6 @@ func (t TunnelDB) optimize() error {
 
 		return nil
 	})
-
 	if err != nil {
 		return oops.Wrapf(err, "failed to iterate severity")
 	}

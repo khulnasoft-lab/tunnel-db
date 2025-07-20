@@ -7,6 +7,7 @@ import (
 	"github.com/khulnasoft-lab/tunnel-db/pkg/db"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/dbtest"
 	"github.com/khulnasoft-lab/tunnel-db/pkg/types"
+	"github.com/khulnasoft-lab/tunnel-db/pkg/vulnsrc/vulnerability"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -87,15 +88,15 @@ func TestConfig_ForEachAdvisory(t *testing.T) {
 			got, err := dbc.ForEachAdvisory([]string{tt.args.source}, tt.args.pkgName)
 
 			if tt.wantErr != "" {
-				require.NotNil(t, err)
+				require.Error(t, err)
 				assert.Contains(t, err.Error(), tt.wantErr)
 				return
 			}
 
-			assert.NoError(t, err)
+			require.NoError(t, err)
 
 			// Compare
-			assert.Equal(t, len(tt.want), len(got))
+			assert.Len(t, got, len(tt.want))
 			for cveID, g := range got {
 				wantAdvisory, ok := tt.want[cveID]
 				if !ok {
@@ -168,16 +169,29 @@ func TestConfig_GetAdvisories(t *testing.T) {
 				source:  "composer::",
 				pkgName: "symfony/symfony",
 			},
-			fixtures: []string{"testdata/fixtures/multiple-buckets.yaml"},
+			fixtures: []string{
+				"testdata/fixtures/multiple-buckets.yaml",
+				"testdata/fixtures/data-source.yaml",
+			},
 			want: []types.Advisory{
 				{
 					VulnerabilityID:    "CVE-2019-10909",
 					PatchedVersions:    []string{"4.2.7"},
 					VulnerableVersions: []string{">= 4.2.0, < 4.2.7"},
+					DataSource: &types.DataSource{
+						ID:   vulnerability.GHSA,
+						Name: "GitHub Security Advisory Composer",
+						URL:  "https://github.com/advisories?query=type%%3Areviewed+ecosystem%%3Acomposer",
+					},
 				},
 				{
 					VulnerabilityID:    "CVE-2020-5275",
 					VulnerableVersions: []string{">= 4.4.0, < 4.4.7"},
+					DataSource: &types.DataSource{
+						ID:   vulnerability.PhpSecurityAdvisories,
+						Name: "PHP Security Advisories Database",
+						URL:  "https://github.com/FriendsOfPHP/security-advisories",
+					},
 				},
 			},
 		},
@@ -209,10 +223,10 @@ func TestConfig_GetAdvisories(t *testing.T) {
 
 			switch {
 			case tt.wantErr != "":
-				require.NotNil(t, err)
+				require.Error(t, err)
 				assert.Contains(t, err.Error(), tt.wantErr)
 			default:
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 
 			// Compare

@@ -15,7 +15,7 @@ type rpmInfoTest struct {
 	Arch           string
 }
 
-func unmarshalJSONFile(v interface{}, fileName string) error {
+func UnmarshalJSONFile(v any, fileName string) error {
 	eb := oops.With("file_path", fileName)
 
 	f, err := os.Open(fileName)
@@ -32,7 +32,7 @@ func unmarshalJSONFile(v interface{}, fileName string) error {
 
 func parseObjects(dir string) (map[string]string, error) {
 	var objects ovalObjects
-	if err := unmarshalJSONFile(&objects, filepath.Join(dir, "objects", "objects.json")); err != nil {
+	if err := UnmarshalJSONFile(&objects, filepath.Join(dir, "objects", "objects.json")); err != nil {
 		return nil, oops.Wrapf(err, "failed to unmarshal objects")
 	}
 	objs := map[string]string{}
@@ -44,7 +44,7 @@ func parseObjects(dir string) (map[string]string, error) {
 
 func parseStates(dir string) (map[string]rpminfoState, error) {
 	var ss ovalStates
-	if err := unmarshalJSONFile(&ss, filepath.Join(dir, "states", "states.json")); err != nil {
+	if err := UnmarshalJSONFile(&ss, filepath.Join(dir, "states", "states.json")); err != nil {
 		return nil, oops.Wrapf(err, "failed to unmarshal states")
 	}
 
@@ -67,7 +67,7 @@ func parseTests(dir string) (map[string]rpmInfoTest, error) {
 	}
 
 	var tt ovalTests
-	if err := unmarshalJSONFile(&tt, filepath.Join(dir, "tests", "tests.json")); err != nil {
+	if err := UnmarshalJSONFile(&tt, filepath.Join(dir, "tests", "tests.json")); err != nil {
 		return nil, oops.Wrapf(err, "failed to unmarshal states")
 	}
 

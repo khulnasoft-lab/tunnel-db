@@ -7,9 +7,7 @@ import (
 	"github.com/khulnasoft-lab/tunnel-db/pkg/log"
 )
 
-var (
-	version = "0.0.1"
-)
+var version = "0.0.1"
 
 func main() {
 	ac := pkg.AppConfig{}

@@ -28,7 +28,7 @@ func walkCocoaPodsSpecs(root string) (map[string][]string, error) {
 	log.WithPrefix("cocoapods").Info("Walk `Cocoapods Specs` to convert Swift URLs to Cocoapods package names")
 	eb := oops.In("cocoapods").With("root_dir", root)
 
-	var specs = make(map[string][]string)
+	specs := make(map[string][]string)
 	err := utils.FileWalk(filepath.Join(root, cocoapodsSpecDir), func(r io.Reader, path string) error {
 		if filepath.Ext(path) != ".json" {
 			return nil

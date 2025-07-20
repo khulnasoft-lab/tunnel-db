@@ -4,24 +4,22 @@ import "encoding/json"
 
 type Status int
 
-var (
-	// Statuses is a list of statuses.
-	// VEX has 4 statuses: not-affected, affected, fixed, and under_investigation.
-	// cf. https://www.cisa.gov/sites/default/files/2023-04/minimum-requirements-for-vex-508c.pdf
-	//
-	// In addition to them, Red Hat has "will_not_fix" and "fix_deferred".
-	// cf. https://access.redhat.com/blogs/product-security/posts/2066793
-	Statuses = []string{
-		"unknown",
-		"not_affected",
-		"affected",
-		"fixed",
-		"under_investigation",
-		"will_not_fix",
-		"fix_deferred",
-		"end_of_life",
-	}
-)
+// Statuses is a list of statuses.
+// VEX has 4 statuses: not-affected, affected, fixed, and under_investigation.
+// cf. https://www.cisa.gov/sites/default/files/2023-04/minimum-requirements-for-vex-508c.pdf
+//
+// In addition to them, Red Hat has "will_not_fix" and "fix_deferred".
+// cf. https://access.redhat.com/blogs/product-security/posts/2066793
+var Statuses = []string{
+	"unknown",
+	"not_affected",
+	"affected",
+	"fixed",
+	"under_investigation",
+	"will_not_fix",
+	"fix_deferred",
+	"end_of_life",
+}
 
 const (
 	StatusUnknown Status = iota

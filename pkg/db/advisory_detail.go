@@ -53,7 +53,7 @@ func (dbc Config) saveAdvisories(tx *bolt.Tx, bkt *bolt.Bucket, bktNames []strin
 				return eb.Wrapf(err, "unable to save advisories")
 			}
 		} else {
-			detail := map[string]interface{}{}
+			detail := map[string]any{}
 			if err := json.Unmarshal(v, &detail); err != nil {
 				return eb.Wrapf(err, "json unmarshal error")
 			}

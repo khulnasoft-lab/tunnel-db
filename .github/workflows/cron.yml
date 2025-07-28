@@ -20,7 +20,7 @@ jobs:
           egress-policy: audit
 
       - name: Maximize build space
-        uses: AdityaGarg8/remove-unwanted-software@main
+        uses: AdityaGarg8/remove-unwanted-software@master
         with:
           root-reserve-mb: 32768
           remove-android: "true"

@@ -6,10 +6,13 @@ import (
 	"time"
 )
 
+// Severity represents the level of a vulnerability.
 type Severity int
 
+// VendorSeverity maps a SourceID to its severity.
 type VendorSeverity map[SourceID]Severity
 
+// CVSS represents CVSS scores and vectors for multiple versions.
 type CVSS struct {
 	V2Vector  string  `json:"V2Vector,omitempty"`
 	V3Vector  string  `json:"V3Vector,omitempty"`
@@ -19,13 +22,16 @@ type CVSS struct {
 	V40Score  float64 `json:"V40Score,omitempty"`
 }
 
+// CVSSVector holds simple v2/v3 vector representation.
 type CVSSVector struct {
 	V2 string `json:"v2,omitempty"`
 	V3 string `json:"v3,omitempty"`
 }
 
+// VendorCVSS maps SourceID to CVSS data.
 type VendorCVSS map[SourceID]CVSS
 
+// Severity constants
 const (
 	SeverityUnknown Severity = iota
 	SeverityLow
@@ -42,6 +48,7 @@ var SeverityNames = []string{
 	"CRITICAL",
 }
 
+// NewSeverity converts a string to a Severity value.
 func NewSeverity(severity string) (Severity, error) {
 	for i, name := range SeverityNames {
 		if severity == name {
@@ -51,21 +58,26 @@ func NewSeverity(severity string) (Severity, error) {
 	return SeverityUnknown, fmt.Errorf("unknown severity: %s", severity)
 }
 
+// CompareSeverityString returns an integer difference of two severity strings.
 func CompareSeverityString(sev1, sev2 string) int {
 	s1, _ := NewSeverity(sev1)
 	s2, _ := NewSeverity(sev2)
 	return int(s2) - int(s1)
 }
 
+// String converts Severity to string.
 func (s Severity) String() string {
 	return SeverityNames[s]
 }
 
+// LastUpdated represents a timestamp of last update.
 type LastUpdated struct {
 	Date time.Time
 }
+
+// VulnerabilityDetail holds detailed info for a single vulnerability.
 type VulnerabilityDetail struct {
-	ID               string     `json:",omitempty"` // e.g. CVE-2019-8331, OSVDB-104365
+	ID               string     `json:",omitempty"`
 	CvssScore        float64    `json:",omitempty"`
 	CvssVector       string     `json:",omitempty"`
 	CvssScoreV3      float64    `json:",omitempty"`
@@ -75,88 +87,69 @@ type VulnerabilityDetail struct {
 	Severity         Severity   `json:",omitempty"`
 	SeverityV3       Severity   `json:",omitempty"`
 	SeverityV40      Severity   `json:",omitempty"`
-	CweIDs           []string   `json:",omitempty"` // e.g. CWE-78, CWE-89
+	CweIDs           []string   `json:",omitempty"`
 	References       []string   `json:",omitempty"`
 	Title            string     `json:",omitempty"`
 	Description      string     `json:",omitempty"`
-	PublishedDate    *time.Time `json:",omitempty"` // Take from NVD
-	LastModifiedDate *time.Time `json:",omitempty"` // Take from NVD
+	PublishedDate    *time.Time `json:",omitempty"`
+	LastModifiedDate *time.Time `json:",omitempty"`
 }
 
+// AdvisoryDetail holds advisory info per platform/package
 type AdvisoryDetail struct {
 	PlatformName string
 	PackageName  string
 	AdvisoryItem interface{}
 }
 
-// SourceID represents data source such as NVD.
+// SourceID represents the ID of a data source (e.g., NVD)
 type SourceID string
 
+// DataSource represents metadata about an advisory source.
 type DataSource struct {
-	ID   SourceID `json:",omitempty"`
-	Name string   `json:",omitempty"`
-	URL  string   `json:",omitempty"`
-
-	// BaseID shows Base source of advisories.
-	// e.g. `Root.io` based on Debian/Ubuntu/Alpine advisories.
-	BaseID SourceID `json:",omitzero"`
+	ID     SourceID `json:",omitempty"`
+	Name   string   `json:",omitempty"`
+	URL    string   `json:",omitempty"`
+	BaseID SourceID `json:",omitempty"` // Base source (optional)
 }
 
+// Status represents advisory status (internal use)
+type Status int
+
+// Advisory represents a vulnerability advisory for a package
 type Advisory struct {
-	VulnerabilityID string   `json:",omitempty"` // CVE-ID or vendor ID
-	VendorIDs       []string `json:",omitempty"` // e.g. RHSA-ID and DSA-ID
-
-	Arches []string `json:",omitempty"`
-
-	// It is filled only when FixedVersion is empty since it is obvious the state is "Fixed" when FixedVersion is not empty.
-	// e.g. Will not fix and Affected
-	Status Status `json:"-"`
-
-	// Tunnel DB has "vulnerability" bucket and severities are usually stored in the bucket per a vulnerability ID.
-	// In some cases, the advisory may have multiple severities depending on the packages.
-	// For example, CVE-2015-2328 in Debian has "unimportant" for mongodb and "low" for pcre3.
-	// e.g. https://security-tracker.debian.org/tracker/CVE-2015-2328
-	Severity Severity `json:",omitempty"`
-
-	// Versions for os package
-	FixedVersion    string `json:",omitempty"`
-	AffectedVersion string `json:",omitempty"` // Only for Arch Linux
-
-	// MajorVersion ranges for language-specific package
-	// Some advisories provide VulnerableVersions only, others provide PatchedVersions and UnaffectedVersions
-	VulnerableVersions []string `json:",omitempty"`
-	PatchedVersions    []string `json:",omitempty"`
-	UnaffectedVersions []string `json:",omitempty"`
-
-	// DataSource holds where the advisory comes from
-	DataSource *DataSource `json:",omitempty"`
-
-	// Custom is basically for extensibility and is not supposed to be used in OSS
-	Custom interface{} `json:",omitempty"`
+	VulnerabilityID    string     `json:",omitempty"`
+	VendorIDs          []string   `json:",omitempty"`
+	Arches             []string   `json:",omitempty"`
+	Status             Status     `json:"-"`
+	Severity           Severity   `json:",omitempty"`
+	FixedVersion       string     `json:",omitempty"`
+	AffectedVersion    string     `json:",omitempty"`
+	VulnerableVersions []string   `json:",omitempty"`
+	PatchedVersions    []string   `json:",omitempty"`
+	UnaffectedVersions []string   `json:",omitempty"`
+	DataSource         *DataSource `json:",omitempty"`
+	Custom             interface{} `json:",omitempty"`
 }
 
-// _Advisory is an internal struct for Advisory to avoid infinite MarshalJSON loop.
+// _Advisory is an internal struct to avoid infinite MarshalJSON recursion
 type _Advisory Advisory
 
+// dbAdvisory is used for custom JSON marshaling
 type dbAdvisory struct {
 	_Advisory
 	IntStatus int `json:"Status,omitempty"`
 }
 
-// MarshalJSON customizes how an Advisory is marshaled to JSON.
-// It is used when saving the Advisory to the BoltDB database.
-// To reduce the size of the database, the Status field is converted to an integer before being saved,
-// while the status is normally exported as a string in JSON.
-// This is done by creating an anonymous struct that has all the same fields as Advisory,
-// but with the Status field replaced by an IntStatus field of type int.
+// MarshalJSON encodes Advisory with Status as int to reduce DB size
 func (a *Advisory) MarshalJSON() ([]byte, error) {
-	advisory := dbAdvisory{
+	return json.Marshal(dbAdvisory{
 		_Advisory: _Advisory(*a),
 		IntStatus: int(a.Status),
-	}
-	return json.Marshal(advisory)
+	})
 }
 
+// UnmarshalJSON decodes Advisory from DB JSON
 func (a *Advisory) UnmarshalJSON(data []byte) error {
 	var advisory dbAdvisory
 	if err := json.Unmarshal(data, &advisory); err != nil {
@@ -167,29 +160,26 @@ func (a *Advisory) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// Advisories saves fixed versions for each arches/vendorIDs
-// e.g. this is required when CVE has different fixed versions for different arches
+// Advisories holds multiple advisory entries for a package
 type Advisories struct {
-	FixedVersion string     `json:",omitempty"` // For backward compatibility
+	FixedVersion string     `json:",omitempty"`
 	Entries      []Advisory `json:",omitempty"`
-	// Custom is basically for extensibility and is not supposed to be used in OSS
-	Custom interface{} `json:",omitempty"` // For backward compatibility
+	Custom       interface{} `json:",omitempty"`
 }
 
+// Vulnerability is a normalized view of a vulnerability
 type Vulnerability struct {
 	Title            string         `json:",omitempty"`
 	Description      string         `json:",omitempty"`
-	Severity         string         `json:",omitempty"` // Selected from VendorSeverity, depending on a scan target
-	CweIDs           []string       `json:",omitempty"` // e.g. CWE-78, CWE-89
+	Severity         string         `json:",omitempty"`
+	CweIDs           []string       `json:",omitempty"`
 	VendorSeverity   VendorSeverity `json:",omitempty"`
 	CVSS             VendorCVSS     `json:",omitempty"`
 	References       []string       `json:",omitempty"`
-	PublishedDate    *time.Time     `json:",omitempty"` // Take from NVD
-	LastModifiedDate *time.Time     `json:",omitempty"` // Take from NVD
-
-	// Custom is basically for extensibility and is not supposed to be used in OSS
-	Custom interface{} `json:",omitempty"`
+	PublishedDate    *time.Time     `json:",omitempty"`
+	LastModifiedDate *time.Time     `json:",omitempty"`
+	Custom           interface{}    `json:",omitempty"`
 }
 
-// Ecosystem represents language-specific ecosystem
+// Ecosystem represents a language-specific ecosystem
 type Ecosystem string

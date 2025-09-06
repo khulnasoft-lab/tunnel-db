@@ -14,10 +14,12 @@ import (
 	"k8s.io/utils/clock"
 )
 
+// VulnDB defines the interface for building vulnerability DBs
 type VulnDB interface {
 	Build(targets []string) error
 }
 
+// TunnelDB represents the vulnerability database engine
 type TunnelDB struct {
 	dbc            db.Config
 	metadata       metadata.Client
@@ -28,38 +30,42 @@ type TunnelDB struct {
 	clock          clock.Clock
 }
 
+// Option type allows configuring TunnelDB
 type Option func(*TunnelDB)
 
-func WithClock(clock clock.Clock) Option {
-	return func(core *TunnelDB) {
-		core.clock = clock
+// WithClock allows using a custom clock (useful for testing)
+func WithClock(c clock.Clock) Option {
+	return func(t *TunnelDB) {
+		t.clock = c
 	}
 }
 
+// WithVulnSrcs allows overriding vulnerability sources
 func WithVulnSrcs(srcs map[types.SourceID]vulnsrc.VulnSrc) Option {
-	return func(core *TunnelDB) {
-		core.vulnSrcs = srcs
+	return func(t *TunnelDB) {
+		t.vulnSrcs = srcs
 	}
 }
 
+// New creates a new TunnelDB instance
 func New(cacheDir, outputDir string, updateInterval time.Duration, opts ...Option) *TunnelDB {
-	// Initialize map
+	// Initialize vulnerability sources map
 	vulnSrcs := map[types.SourceID]vulnsrc.VulnSrc{}
 	for _, v := range vulnsrc.All {
 		vulnSrcs[v.Name()] = v
 	}
 
-	dbc := db.Config{}
 	tdb := &TunnelDB{
-		dbc:            dbc,
+		dbc:            db.Config{},
 		metadata:       metadata.NewClient(outputDir),
-		vulnClient:     vulnerability.New(dbc),
+		vulnClient:     vulnerability.New(db.Config{}),
 		vulnSrcs:       vulnSrcs,
 		cacheDir:       cacheDir,
 		updateInterval: updateInterval,
 		clock:          clock.RealClock{},
 	}
 
+	// Apply optional configuration
 	for _, opt := range opts {
 		opt(tdb)
 	}
@@ -67,23 +73,24 @@ func New(cacheDir, outputDir string, updateInterval time.Duration, opts ...Optio
 	return tdb
 }
 
-func (t TunnelDB) Insert(targets []string) error {
+// Insert updates all specified vulnerability sources
+func (t *TunnelDB) Insert(targets []string) error {
 	log.Info("Updating vulnerability database...")
 	eb := oops.In("db")
 
 	for _, target := range targets {
-		eb := eb.With("target", target)
 		src, ok := t.vulnSrc(target)
 		if !ok {
-			return eb.Errorf("target not supported")
+			return eb.With("target", target).Errorf("target not supported")
 		}
-		log.WithPrefix(target).Info("Updating data...")
 
+		log.WithPrefix(target).Info("Updating data...")
 		if err := src.Update(t.cacheDir); err != nil {
-			return eb.Wrapf(err, "update error")
+			return eb.With("target", target).Wrapf(err, "update error")
 		}
 	}
 
+	// Update metadata
 	md := metadata.Metadata{
 		Version:    db.SchemaVersion,
 		NextUpdate: t.clock.Now().UTC().Add(t.updateInterval),
@@ -97,20 +104,18 @@ func (t TunnelDB) Insert(targets []string) error {
 	return nil
 }
 
-func (t TunnelDB) Build(targets []string) error {
+// Build runs the complete vulnerability DB build pipeline
+func (t *TunnelDB) Build(targets []string) error {
 	eb := oops.In("db")
 
-	// Insert all security advisories
 	if err := t.Insert(targets); err != nil {
 		return eb.Wrapf(err, "insert error")
 	}
 
-	// Remove unnecessary details
 	if err := t.optimize(); err != nil {
 		return eb.Wrapf(err, "optimize error")
 	}
 
-	// Remove unnecessary buckets
 	if err := t.cleanup(); err != nil {
 		return eb.Wrapf(err, "cleanup error")
 	}
@@ -118,7 +123,8 @@ func (t TunnelDB) Build(targets []string) error {
 	return nil
 }
 
-func (t TunnelDB) vulnSrc(target string) (vulnsrc.VulnSrc, bool) {
+// vulnSrc returns the VulnSrc for a given target
+func (t *TunnelDB) vulnSrc(target string) (vulnsrc.VulnSrc, bool) {
 	for _, src := range t.vulnSrcs {
 		if target == string(src.Name()) {
 			return src, true
@@ -127,13 +133,14 @@ func (t TunnelDB) vulnSrc(target string) (vulnsrc.VulnSrc, bool) {
 	return nil, false
 }
 
-func (t TunnelDB) optimize() error {
-	// NVD also contains many vulnerabilities that are not related to OS packages or language-specific packages.
-	// Tunnel DB will not store them so that it could reduce the database size.
-	// This bucket has only vulnerability IDs provided by vendors. They must be stored.
+// optimize filters and normalizes vulnerabilities
+func (t *TunnelDB) optimize() error {
+	eb := oops.In("db")
+
 	err := t.dbc.ForEachVulnerabilityID(func(tx *bolt.Tx, cveID string) error {
-		eb := oops.With("vuln_id", cveID)
+		eb := eb.With("vuln_id", cveID)
 		details := t.vulnClient.GetDetails(cveID)
+
 		if t.vulnClient.IsRejected(details) {
 			return nil
 		}
@@ -153,24 +160,28 @@ func (t TunnelDB) optimize() error {
 
 		return nil
 	})
+
 	if err != nil {
-		return oops.Wrapf(err, "failed to iterate severity")
+		return eb.Wrapf(err, "failed to iterate vulnerabilities")
 	}
 
 	return nil
 }
 
-func (t TunnelDB) cleanup() error {
+// cleanup removes temporary buckets used during the build process
+func (t *TunnelDB) cleanup() error {
+	eb := oops.In("db")
+
 	if err := t.dbc.DeleteVulnerabilityIDBucket(); err != nil {
-		return oops.Wrapf(err, "failed to delete severity bucket")
+		return eb.Wrapf(err, "failed to delete vulnerability ID bucket")
 	}
 
 	if err := t.dbc.DeleteVulnerabilityDetailBucket(); err != nil {
-		return oops.Wrapf(err, "failed to delete vulnerability detail bucket")
+		return eb.Wrapf(err, "failed to delete vulnerability detail bucket")
 	}
 
 	if err := t.dbc.DeleteAdvisoryDetailBucket(); err != nil {
-		return oops.Wrapf(err, "failed to delete advisory detail bucket")
+		return eb.Wrapf(err, "failed to delete advisory detail bucket")
 	}
 
 	return nil

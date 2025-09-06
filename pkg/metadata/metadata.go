@@ -11,31 +11,33 @@ import (
 
 const metadataFile = "metadata.json"
 
+// Metadata stores the state of the database
 type Metadata struct {
-	Version      int `json:",omitempty"`
+	Version      int       `json:",omitempty"`
 	NextUpdate   time.Time
 	UpdatedAt    time.Time
-	DownloadedAt time.Time // This field will be filled after downloading.
+	DownloadedAt time.Time // Filled after downloading
 }
 
-// Client defines the file meta
+// Client manages metadata file operations
 type Client struct {
 	filePath string
 }
 
-// NewClient is the factory method for the metadata Client
-func NewClient(dbDir string) Client {
-	return Client{
+// NewClient creates a new metadata Client for the given database directory
+func NewClient(dbDir string) *Client {
+	return &Client{
 		filePath: Path(dbDir),
 	}
 }
 
+// Path returns the full path to the metadata file
 func Path(dbDir string) string {
 	return filepath.Join(dbDir, metadataFile)
 }
 
-// Get returns the file metadata
-func (c Client) Get() (Metadata, error) {
+// Get reads the metadata from the file
+func (c *Client) Get() (Metadata, error) {
 	eb := oops.With("file_path", c.filePath)
 
 	f, err := os.Open(c.filePath)
@@ -44,14 +46,15 @@ func (c Client) Get() (Metadata, error) {
 	}
 	defer f.Close()
 
-	var metadata Metadata
-	if err = json.NewDecoder(f).Decode(&metadata); err != nil {
+	var meta Metadata
+	if err = json.NewDecoder(f).Decode(&meta); err != nil {
 		return Metadata{}, eb.Wrapf(err, "json decode error")
 	}
-	return metadata, nil
+	return meta, nil
 }
 
-func (c Client) Update(meta Metadata) error {
+// Update writes the metadata to the file, creating directories as needed
+func (c *Client) Update(meta Metadata) error {
 	eb := oops.With("file_path", c.filePath)
 
 	if err := os.MkdirAll(filepath.Dir(c.filePath), 0o744); err != nil {
@@ -64,14 +67,15 @@ func (c Client) Update(meta Metadata) error {
 	}
 	defer f.Close()
 
-	if err = json.NewEncoder(f).Encode(&meta); err != nil {
+	if err := json.NewEncoder(f).Encode(&meta); err != nil {
 		return eb.Wrapf(err, "json encode error")
 	}
+
 	return nil
 }
 
-// Delete deletes the file of database metadata
-func (c Client) Delete() error {
+// Delete removes the metadata file
+func (c *Client) Delete() error {
 	if err := os.Remove(c.filePath); err != nil {
 		return oops.With("file_path", c.filePath).Wrapf(err, "file remove error")
 	}

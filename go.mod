@@ -11,7 +11,7 @@ require (
 	github.com/pandatix/go-cvss v0.6.2
 	github.com/samber/lo v1.51.0
 	github.com/samber/oops v1.19.0
-	github.com/stretchr/testify v1.11.0
+	github.com/stretchr/testify v1.11.1
 	github.com/urfave/cli v1.22.17
 	go.etcd.io/bbolt v1.4.3
 	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792

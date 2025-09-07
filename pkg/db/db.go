@@ -53,6 +53,10 @@ type Operation interface {
 	PutRedHatCPEs(tx *bolt.Tx, cpeIndex int, cpe string) (err error)
 	RedHatRepoToCPEs(repository string) (cpeIndices []int, err error)
 	RedHatNVRToCPEs(nvr string) (cpeIndices []int, err error)
+
+	// New methods for indexing and schema overview
+	CreateIndexes(tx *bolt.Tx) error
+	GenerateSchemaOverview() (string, error)
 }
 
 type Config struct{}
@@ -269,4 +273,49 @@ func (dbc Config) deleteBucket(bucketName string) error {
 		}
 		return nil
 	})
+}
+
+// CreateIndexes creates indexes on key fields for performance optimization
+func (dbc Config) CreateIndexes(tx *bolt.Tx) error {
+	// Example: Create an index on the "vulnerability" bucket
+	vulnBucket := tx.Bucket([]byte(vulnerabilityBucket))
+	if vulnBucket == nil {
+		return oops.Errorf("vulnerability bucket not found")
+	}
+
+	// Create an index on the "severity" field
+	err := vulnBucket.ForEach(func(k, v []byte) error {
+		var vuln types.Vulnerability
+		if err := json.Unmarshal(v, &vuln); err != nil {
+			return oops.Wrapf(err, "json unmarshal error")
+		}
+
+		indexKey := []byte(vuln.Severity + ":" + string(k))
+		return vulnBucket.Put(indexKey, v)
+	})
+	if err != nil {
+		return oops.Wrapf(err, "failed to create index on severity")
+	}
+
+	return nil
+}
+
+// GenerateSchemaOverview generates an overview of all tables, relations, and key fields
+func (dbc Config) GenerateSchemaOverview() (string, error) {
+	var overview strings.Builder
+
+	err := db.View(func(tx *bolt.Tx) error {
+		return tx.ForEach(func(name []byte, b *bolt.Bucket) error {
+			overview.WriteString("Bucket: " + string(name) + "\n")
+			return b.ForEach(func(k, v []byte) error {
+				overview.WriteString("  Key: " + string(k) + "\n")
+				return nil
+			})
+		})
+	})
+	if err != nil {
+		return "", oops.Wrapf(err, "failed to generate schema overview")
+	}
+
+	return overview.String(), nil
 }
